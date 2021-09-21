@@ -7,7 +7,7 @@
 [node name="global" type="Node2D"]
 script = ExtResource( 2 )
 
-[node name="Label" type="Label" parent="."]
+[node name="label" type="Label" parent="."]
 margin_left = 142.0
 margin_right = 634.0
 margin_bottom = 36.0

@@ -13,11 +13,11 @@ const Balls = [
 	 preload("res://images/9.png"),
 ]
 const POS = [
-	Vector2(100,300), Vector2(450-10,300), 
-	Vector2(500,300), Vector2(500,250-10), 
-	Vector2(500,350+10), Vector2(550+10,200-20),
-	Vector2(550+10,250-10), Vector2(550+10,300),
-	Vector2(550+10,350+10), Vector2(550+10,400+20)
+	Vector2(100,300), Vector2(440,300), 
+	Vector2(500,300), Vector2(500,240), 
+	Vector2(500,340), Vector2(560,180),
+	Vector2(560,240), Vector2(560,300),
+	Vector2(560,360), Vector2(560,420)
 ]
 var screenH
 var screenW
@@ -49,5 +49,7 @@ func _input(event):
 		ball0.impulse(dir * 4)
 
 func drop_hole(ball):
-	#print(ball.id)
+	if ball.id != 0:
+		score += 100
+		$label.text = "Score: " + str(score)
 	$hole.play()
