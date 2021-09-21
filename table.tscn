@@ -1,0 +1,95 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://images/pool-table.png" type="Texture" id=1]
+[ext_resource path="res://table.gd" type="Script" id=2]
+
+[sub_resource type="PhysicsMaterial" id=1]
+friction = 0.5
+bounce = 0.5
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 30.0
+
+[node name="table" type="Area2D"]
+collision_mask = 2
+script = ExtResource( 2 )
+
+[node name="TextureRect" type="TextureRect" parent="."]
+margin_right = 1024.0
+margin_bottom = 600.0
+texture = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="top" type="StaticBody2D" parent="." groups=[
+"table",
+]]
+collision_mask = 4
+physics_material_override = SubResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="segment" type="CollisionPolygon2D" parent="top"]
+build_mode = 1
+polygon = PoolVector2Array( 56, 0, 80, 32, 944, 32, 968, 0 )
+
+[node name="left" type="StaticBody2D" parent="." groups=[
+"table",
+]]
+collision_mask = 4
+physics_material_override = SubResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="segment" type="CollisionPolygon2D" parent="left"]
+build_mode = 1
+polygon = PoolVector2Array( 0, 64, 32, 80, 32, 520, 0, 536 )
+
+[node name="right" type="StaticBody2D" parent="." groups=[
+"table",
+]]
+collision_mask = 4
+physics_material_override = SubResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="segment" type="CollisionPolygon2D" parent="right"]
+position = Vector2( 992, -16 )
+build_mode = 1
+polygon = PoolVector2Array( 0, 96, 32, 80, 32, 552, 0, 528 )
+
+[node name="bottom" type="StaticBody2D" parent="." groups=[
+"table",
+]]
+collision_mask = 4
+physics_material_override = SubResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="segment" type="CollisionPolygon2D" parent="bottom"]
+position = Vector2( -8, 568 )
+build_mode = 1
+polygon = PoolVector2Array( 88, 0, 64, 32, 976, 32, 952, 0 )
+
+[node name="hoyo1" type="CollisionShape2D" parent="."]
+position = Vector2( 16, 16 )
+shape = SubResource( 2 )
+
+[node name="hoyo2" type="CollisionShape2D" parent="."]
+position = Vector2( 1008, 16 )
+shape = SubResource( 2 )
+
+[node name="hoyo3" type="CollisionShape2D" parent="."]
+position = Vector2( 16, 584 )
+shape = SubResource( 2 )
+
+[node name="hoyo4" type="CollisionShape2D" parent="."]
+position = Vector2( 1008, 584 )
+shape = SubResource( 2 )
+
+[connection signal="body_entered" from="." to="." method="_on_table_body_entered"]

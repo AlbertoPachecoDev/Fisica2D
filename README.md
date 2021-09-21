@@ -1,4 +1,4 @@
 # Marcador
-Godot Score Panel 
+Godot Game Physics 2D
 
-Primer Ejercicio Godot: Creando un recurso global (Singleton) para manejar un marcador básico en juegos 2D
+Prototipo Juego 2D incorporando Física 2D y colisiones

@@ -1,13 +1,15 @@
 extends Node2D
 
-onready var sprite = preload("res://Sprite.tscn")
+onready var ball = preload("res://ball.tscn")
 
 func _ready():
-	Score.sprites = []
 	for i in range(10):
-		var s = sprite.instance()
-		s.id = i
-		s.set_scale(Score.SCALE)
-		s.set_texture(Score.Digits[i])
-		add_child(s)
-		Score.sprites.append(s)
+		var b = ball.instance()
+		if i==0:
+			Global.ball0 = b
+			b.mass += 2
+		b.id = i
+		b.name = "ball" + str(i)
+		b.set_position(Global.POS[i])
+		b.get_node("sprite").set_texture(Global.Balls[i])
+		add_child(b)
