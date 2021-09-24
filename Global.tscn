@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://fonts/score.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Global.gd" type="Script" id=2]
 [ext_resource path="res://audio/drop.wav" type="AudioStream" id=3]
+[ext_resource path="res://images/taco.png" type="Texture" id=4]
+[ext_resource path="res://taco.tscn" type="PackedScene" id=5]
 
 [node name="global" type="Node2D"]
 script = ExtResource( 2 )
@@ -19,3 +21,29 @@ __meta__ = {
 
 [node name="hole" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 3 )
+
+[node name="taco2" type="Sprite" parent="."]
+visible = false
+scale = Vector2( 2, 2 )
+texture = ExtResource( 4 )
+
+[node name="tween" type="Tween" parent="taco2"]
+
+[node name="taco" parent="." instance=ExtResource( 5 )]
+visible = false
+
+[node name="del_cue" type="Timer" parent="."]
+wait_time = 0.25
+one_shot = true
+
+[node name="start_damp" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
+[node name="inc_damp" type="Timer" parent="."]
+wait_time = 0.5
+
+[connection signal="tween_all_completed" from="taco2/tween" to="." method="_on_tween_tween_all_completed"]
+[connection signal="timeout" from="del_cue" to="." method="_on_del_cue_timeout"]
+[connection signal="timeout" from="start_damp" to="." method="_on_friction_timeout"]
+[connection signal="timeout" from="inc_damp" to="." method="_on_inc_damp_timeout"]
