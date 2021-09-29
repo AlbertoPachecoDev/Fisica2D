@@ -1,20 +1,70 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://images/0.png" type="Texture" id=1]
 [ext_resource path="res://ball.gd" type="Script" id=2]
 [ext_resource path="res://audio/hit.wav" type="AudioStream" id=3]
 
-[sub_resource type="PhysicsMaterial" id=1]
+[sub_resource type="PhysicsMaterial" id=3]
 friction = 0.5
 bounce = 1.0
 
-[sub_resource type="CircleShape2D" id=2]
+[sub_resource type="Shader" id=5]
+code = "// https://godotshaders.com/shader/2d-motion-blur/
+shader_type canvas_item;
+render_mode blend_mix;
+
+uniform vec2 dir = vec2(0,0);
+uniform int quality = 4;
+uniform vec2 deform = vec2(2.0, 2.0);
+uniform vec2 offset = vec2(0.0, 0.0);
+uniform vec4 modulate : hint_color;
+
+void vertex() {
+	vec2 blurSize = abs(dir) * 2.0;
+	VERTEX *= blurSize + 1.0;
+	UV = (UV - 0.5) * (blurSize + 1.0) + 0.5;
+}
+
+float insideUnitSquare(vec2 v) {
+    vec2 s = step(vec2(0.0), v) - step(vec2(1.0), v);
+    return s.x * s.y;   
+}
+
+void fragment() {
+	float inSquare = insideUnitSquare(UV);
+	float numSamples = inSquare;
+	COLOR = texture(TEXTURE, UV) * inSquare;
+	vec2 stepSize = dir/(float(quality));
+	vec2 uv;
+	for(int i = 1; i <= quality; i++) {
+		uv = UV + stepSize * float(i);
+		inSquare = insideUnitSquare(uv);
+		numSamples += inSquare;
+		COLOR += texture(TEXTURE, uv) * inSquare;	
+		uv = UV - stepSize * float(i);
+		inSquare = insideUnitSquare(uv);
+		numSamples += inSquare;
+		COLOR += texture(TEXTURE, uv) * inSquare;
+	}
+	COLOR.rgb /= numSamples;
+	COLOR.a /= float(quality)*2.0 + 1.0;
+}"
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 5 )
+shader_param/dir = Vector2( 0.02, 0 )
+shader_param/quality = 3
+shader_param/deform = Vector2( 0, 0 )
+shader_param/offset = Vector2( -0.5, -0.5 )
+shader_param/modulate = Color( 0, 0, 0, 0.501961 )
+
+[sub_resource type="CircleShape2D" id=4]
 radius = 28.103
 
 [node name="ball" type="RigidBody2D"]
 collision_layer = 2
 collision_mask = 7
-physics_material_override = SubResource( 1 )
+physics_material_override = SubResource( 3 )
 gravity_scale = 0.0
 contacts_reported = 1
 contact_monitor = true
@@ -23,13 +73,15 @@ angular_damp = -0.2
 script = ExtResource( 2 )
 
 [node name="sprite" type="Sprite" parent="."]
+material = SubResource( 6 )
 texture = ExtResource( 1 )
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource( 2 )
+visible = false
+shape = SubResource( 4 )
 one_way_collision_margin = 2.0
 
 [node name="sound" type="AudioStreamPlayer2D" parent="."]

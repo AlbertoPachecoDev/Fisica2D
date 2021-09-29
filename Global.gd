@@ -1,3 +1,22 @@
+"""
+
+RigidBody2D provides simulated physics bodies.
+You don’t control a RigidBody2D directly.
+You apply forces to it (gravity, impulses, etc.) and 
+Godot physics engine calculates the resulting movement, 
+including collisions, bouncing, rotating, etc.
+You can modify RigidBody2D behavior via properties (Mass, Friction, Bounce, etc.)
+A typical RigidBody2D scene has Sprite and CollisionShape2D children nodes.
+By default a RigidBody2D falls downward. You can increase Gravity Scale or turn off (zero).  
+add_force(): adds a continuous force to a rigid body. ej. steadily pushing rocket-thrust for going faster. 
+Note that this adds to any already existing forces. The force continues to be applied until removed.
+apply_impulse(): adds an instantaneous “kick” to the body. Imagine hitting a baseball with a bat.
+By default, the physics settings provide some damping, which reduces a body’s velocity and spin.
+
+https://kidscancode.org/godot_recipes/physics/godot3_kyn_rigidbody1
+https://opengameart.org
+"""
+
 extends Node2D
 
 signal reset()
