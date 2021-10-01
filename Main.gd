@@ -10,8 +10,6 @@ func _ready():
 			b.mass += 2
 		b.id = i
 		b.name = "ball" + str(i)
-		# b.add_to_group("balls")
-		# get_tree().call_group("balls", "reset")
 		b.set_position(Global.POS[i])
 		b.get_node("sprite").set_texture(Global.Balls[i])
 		add_child(b)

@@ -37,11 +37,11 @@ wait_time = 0.25
 one_shot = true
 
 [node name="start_damp" type="Timer" parent="."]
-wait_time = 5.0
+wait_time = 3.0
 one_shot = true
 
 [node name="inc_damp" type="Timer" parent="."]
-wait_time = 0.5
+wait_time = 0.2
 
 [connection signal="tween_all_completed" from="taco2/tween" to="." method="_on_tween_tween_all_completed"]
 [connection signal="timeout" from="del_cue" to="." method="_on_del_cue_timeout"]

@@ -73,7 +73,7 @@ __meta__ = {
 }
 
 [node name="Shader" type="TextureRect" parent="."]
-modulate = Color( 0.639216, 1, 1, 0.360784 )
+modulate = Color( 0.34902, 0.827451, 1, 0.313726 )
 self_modulate = Color( 1, 1, 1, 0.498039 )
 material = SubResource( 2 )
 margin_left = 46.0

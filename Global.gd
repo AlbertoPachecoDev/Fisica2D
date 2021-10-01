@@ -41,7 +41,7 @@ const POS = [
 	Vector2(760,240), Vector2(760,300),
 	Vector2(760,360), Vector2(760,420)
 ]
-const MxDampCnt = 14
+const MxDampCnt = 50  # timer-activated damping times limit
 var screenH
 var screenW
 var level = 1
@@ -58,7 +58,6 @@ var count_damp = 0
 onready var cue = preload("res://taco.tscn")
 var taco = null
 
-
 func _ready():
 	var scr = get_viewport_rect().size
 	screenW = scr.x
@@ -70,7 +69,7 @@ func _ready():
 func reset():
 	count_damp = 0
 	taco = cue.instance()
-	wtaco = taco.width() #$taco2.texture.get_width()
+	wtaco = taco.width()
 	taco.set_position(Vector2(100,300))
 	taco.visible = false
 	$taco2.visible = true
@@ -99,7 +98,6 @@ func _input(event):
 		dragging = false
 		var drag_end = event.position
 		dir = drag_end - drag_start
-		#  $taco.impulse(dir*4)
 		var tween = get_node("taco2/tween")
 		tween.interpolate_property($taco2,'position',pos2,pos1,0.25,Tween.TRANS_LINEAR,Tween.EASE_OUT)
 		tween.start()
@@ -113,7 +111,6 @@ func drop_hole(ball):
 func _on_tween_tween_all_completed():
 	$taco2.visible = false
 	taco.visible = true
-	#ball0.impulse(dir * 4)
 	taco.impulse(dir * 6)
 	$del_cue.start()
 
