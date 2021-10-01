@@ -41,8 +41,7 @@ func _on_ball_body_entered(body):
 	if body.name.substr(0,4) == "ball":
 		var mag = self.linear_velocity.abs().length()
 		mag = clamp(mag, 10, 500)
-		var db = range_lerp(mag, 500, 10, 1, -40)
-		$sound.volume_db = db
+		$sound.volume_db = range_lerp(mag, 500, 10, 1, -50)
 		$sound.play()
 
 func update_damp(count):

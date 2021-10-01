@@ -4,11 +4,11 @@
 [ext_resource path="res://ball.gd" type="Script" id=2]
 [ext_resource path="res://audio/hit.wav" type="AudioStream" id=3]
 
-[sub_resource type="PhysicsMaterial" id=3]
+[sub_resource type="PhysicsMaterial" id=1]
 friction = 0.5
 bounce = 1.0
 
-[sub_resource type="Shader" id=5]
+[sub_resource type="Shader" id=2]
 code = "// https://godotshaders.com/shader/2d-motion-blur/
 shader_type canvas_item;
 render_mode blend_mix;
@@ -50,8 +50,8 @@ void fragment() {
 	COLOR.a /= float(quality)*2.0 + 1.0;
 }"
 
-[sub_resource type="ShaderMaterial" id=6]
-shader = SubResource( 5 )
+[sub_resource type="ShaderMaterial" id=3]
+shader = SubResource( 2 )
 shader_param/dir = Vector2( 0.02, 0 )
 shader_param/quality = 3
 shader_param/deform = Vector2( 0, 0 )
@@ -64,7 +64,7 @@ radius = 28.103
 [node name="ball" type="RigidBody2D"]
 collision_layer = 2
 collision_mask = 7
-physics_material_override = SubResource( 3 )
+physics_material_override = SubResource( 1 )
 gravity_scale = 0.0
 contacts_reported = 1
 contact_monitor = true
@@ -73,14 +73,13 @@ angular_damp = -0.2
 script = ExtResource( 2 )
 
 [node name="sprite" type="Sprite" parent="."]
-material = SubResource( 6 )
+material = SubResource( 3 )
 texture = ExtResource( 1 )
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 shape = SubResource( 4 )
 one_way_collision_margin = 2.0
 
