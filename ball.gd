@@ -1,6 +1,6 @@
 extends RigidBody2D
 
-const BlurMx = Vector2(0.05, 0.0)
+const BlurMx = Vector2(0.035, 0.0)
 const BlurDec = BlurMx.x / 250.0
 const BlurStop = 50 * BlurDec
 

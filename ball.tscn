@@ -52,11 +52,11 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id=3]
 shader = SubResource( 2 )
-shader_param/dir = Vector2( 0.06, 0 )
+shader_param/dir = Vector2( 0.04, 0 )
 shader_param/quality = 2
 shader_param/deform = Vector2( 2, 2 )
 shader_param/offset = Vector2( 4, 0 )
-shader_param/modulate = Color( 0, 0, 0, 0.584314 )
+shader_param/modulate = Color( 0, 0, 0, 0.72549 )
 
 [sub_resource type="CircleShape2D" id=4]
 radius = 28.103
@@ -81,7 +81,6 @@ __meta__ = {
 }
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 shape = SubResource( 4 )
 one_way_collision_margin = 2.0
 

@@ -1,6 +1,6 @@
 extends RigidBody2D
 
-const MaxVel = 4500
+const MaxVel = 6000
 
 func _ready():
 	gravity_scale = 0.0
