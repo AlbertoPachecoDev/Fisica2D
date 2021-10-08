@@ -14,7 +14,7 @@ collision_layer = 4
 collision_mask = 2
 mass = 1.5
 physics_material_override = SubResource( 1 )
-contact_monitor = true
+sleeping = true
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_group_": true
@@ -24,8 +24,6 @@ __meta__ = {
 scale = Vector2( 2, 2 )
 texture = ExtResource( 1 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="collision" type="CollisionShape2D" parent="."]
 position = Vector2( 170.052, 0.999992 )
 shape = SubResource( 2 )
-
-[connection signal="body_entered" from="." to="." method="_on_taco_body_entered"]

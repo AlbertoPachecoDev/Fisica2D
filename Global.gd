@@ -7,10 +7,10 @@
 	You can modify RigidBody2D behavior via properties (Mass, Friction, Bounce, etc.)
 	A typical RigidBody2D scene has Sprite and CollisionShape2D children nodes.
 	By default a RigidBody2D falls downward. You can increase Gravity Scale or turn off (zero).  
-	add_force(): adds a continuous force to a rigid body. ej. steadily pushing rocket-thrust for going faster. 
-	Note that this adds to any already existing forces. The force continues to be applied until removed.
-	apply_impulse(): adds an instantaneous “kick” to the body. Imagine hitting a baseball with a bat.
-	By default, the physics settings provide some damping, which reduces a body’s velocity and spin.
+	- add_force(): adds a continuous force to a rigid body. ej. steadily pushing rocket-thrust for going faster. 
+	  Note that this adds to any already existing forces. The force continues to be applied until removed.
+	- apply_impulse(): adds an instantaneous “kick” to the body. Imagine hitting a baseball with a bat.
+	  By default, the physics settings provide some damping, which reduces a body’s velocity and spin.
 
 	https://kidscancode.org/godot_recipes/physics/godot3_kyn_rigidbody1
 	https://opengameart.org
@@ -19,6 +19,7 @@
 extends Node2D
 
 signal reset()
+signal drop(id)
 signal damp(count)
 
 const Balls = [
@@ -40,7 +41,7 @@ const POS = [
 	Vector2(760,240), Vector2(760,300),
 	Vector2(760,360), Vector2(760,420)
 ]
-const MxDampCnt = 50  # timer-activated damping times limit
+const MxDampCnt = 36  # timer-activated damping cycles
 var screenH
 var screenW
 var level = 1
@@ -48,11 +49,8 @@ var score = 0
 var mouse_start = null
 var ball0 = null
 var dragging = false
-var drag_start = Vector2(100,300)
-#var wtaco
+var drag_start = Vector2(90,300)
 var count_damp = 0
-onready var cue = preload("res://taco.tscn")
-var taco = null
 
 func _ready():
 	var scr = get_viewport_rect().size
@@ -62,12 +60,20 @@ func _ready():
 	z_index = 1
 	reset()
 
+func show_cue(state):
+	$taco.set_visible(state)
+
+func enable_cue(state):
+	# https://godotengine.org/qa/57186/disable-collisionshape2d-%24collisionshape2d-disabled-godot
+	$taco.get_node("collision").set_deferred("disabled", not state) # disable collisions
+	$taco.set_mode(RigidBody2D.MODE_RIGID if state else RigidBody2D.MODE_STATIC)
+
 func reset():
+	$inc_damp.stop()
 	count_damp = 0
-	taco = cue.instance()
-	#wtaco = taco.width()
-	taco.set_position(drag_start)
-	add_child(taco)
+	show_cue(true)
+	enable_cue(false)
+	$taco.set_position(drag_start)
 	dragging = false
 	emit_signal("reset")
 
@@ -75,32 +81,33 @@ func _input(event):
 	if Input.is_action_pressed("ui_cancel"):
 		get_tree().quit()
 	if ball0 == null: return
-	if count_damp != 0: return # freeze cue is balls are rolling
-	if taco == null: return
+	if count_damp != 0: return # ignore input if balls are rolling
 	if event.is_action_pressed("click") and not dragging: # start
 		dragging = true
 		drag_start = event.position
-		taco.set_position(drag_start)
+		$taco.set_position(drag_start)
 	if dragging: # dragging
-		taco.rotation = drag_start.angle_to_point(event.position)
-		taco.set_position(event.position)
+		$taco.rotation = drag_start.angle_to_point(event.position)
+		$taco.set_position(event.position)
 	if event.is_action_released("click") and dragging: # end
 		dragging = false
-		var drag_end = event.position
-		taco.set_position(drag_end)
-		var dir = drag_start - drag_end
-		taco.impulse(dir * 8) # dir.rotated(-PI/2)
+		$taco.set_position(event.position)
+		enable_cue(true)
+		var dir = drag_start - event.position
+		$taco.impulse(dir * 8) # dir.rotated(-PI/2)
 		$del_cue.start()
 
-func drop_hole(ball):
-	if ball.name[0]== "b" and ball.id!=0:
+func drop_hole(id):
+	if id != 0:
 		score += 100
 		$label.text = "Score: " + str(score)
+	emit_signal("drop", id)
 	$hole.play()
 
 func _on_del_cue_timeout():
 	$start_damp.start()
-	taco.queue_free()
+	enable_cue(false)
+	show_cue(false)
 
 func _on_friction_timeout():
 	count_damp = 1
@@ -112,5 +119,6 @@ func _on_inc_damp_timeout():
 	if count_damp < MxDampCnt:
 		emit_signal("damp", count_damp)
 	else:
+		print("Damp finished!!")
 		$inc_damp.stop()
 		reset()

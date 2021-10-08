@@ -33,7 +33,7 @@ func reset():
 # https://godotengine.org/qa/50866/detect-if-rigidbody-touching-colliding-with-another-object
 func _on_ball_body_entered(body):
 	if body.name.substr(0,4) == "ball":
-		var mag = self.linear_velocity.abs().length()
+		var mag = self.linear_velocity.length()
 		mag = clamp(mag, 10, 500)
 		$sound.volume_db = range_lerp(mag, 500, 10, 1, -50)
 		$sound.play()
@@ -43,8 +43,8 @@ func update_damp(count):
 		if not sleeping:
 			sleeping = true # stop physics
 			$sprite.use_parent_material = true
-	linear_damp  += 0.075
-	angular_damp += 0.055
+	linear_damp  += 0.07
+	angular_damp += 0.05
 	if not $sprite.use_parent_material:
 		var v = shader.get_shader_param("dir")
 		if v.x > BlurStop:

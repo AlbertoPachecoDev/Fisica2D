@@ -22,7 +22,6 @@ __meta__ = {
 stream = ExtResource( 3 )
 
 [node name="taco" parent="." instance=ExtResource( 5 )]
-visible = false
 
 [node name="del_cue" type="Timer" parent="."]
 wait_time = 0.4
@@ -33,7 +32,7 @@ wait_time = 3.0
 one_shot = true
 
 [node name="inc_damp" type="Timer" parent="."]
-wait_time = 0.2
+wait_time = 0.25
 
 [connection signal="timeout" from="del_cue" to="." method="_on_del_cue_timeout"]
 [connection signal="timeout" from="start_damp" to="." method="_on_friction_timeout"]
