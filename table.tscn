@@ -41,7 +41,7 @@ void fragment() {
 [sub_resource type="ShaderMaterial" id=2]
 shader = SubResource( 1 )
 shader_param/strength = 0.4
-shader_param/speed = 0.1
+shader_param/speed = 0.2
 shader_param/angle = 45.0
 
 [sub_resource type="OpenSimplexNoise" id=3]
@@ -73,7 +73,8 @@ __meta__ = {
 }
 
 [node name="Shader" type="TextureRect" parent="."]
-modulate = Color( 0.34902, 0.827451, 1, 0.313726 )
+visible = false
+modulate = Color( 0.34902, 0.827451, 1, 0.380392 )
 self_modulate = Color( 1, 1, 1, 0.498039 )
 material = SubResource( 2 )
 margin_left = 46.0
@@ -88,7 +89,7 @@ __meta__ = {
 [node name="top" type="StaticBody2D" parent="." groups=[
 "table",
 ]]
-collision_mask = 4
+collision_mask = 2
 physics_material_override = SubResource( 5 )
 __meta__ = {
 "_edit_lock_": true
@@ -101,7 +102,7 @@ polygon = PoolVector2Array( 56, 0, 80, 32, 944, 32, 968, 0 )
 [node name="left" type="StaticBody2D" parent="." groups=[
 "table",
 ]]
-collision_mask = 4
+collision_mask = 2
 physics_material_override = SubResource( 5 )
 __meta__ = {
 "_edit_lock_": true
@@ -114,7 +115,7 @@ polygon = PoolVector2Array( 0, 64, 32, 80, 32, 520, 0, 536 )
 [node name="right" type="StaticBody2D" parent="." groups=[
 "table",
 ]]
-collision_mask = 4
+collision_mask = 2
 physics_material_override = SubResource( 5 )
 __meta__ = {
 "_edit_lock_": true
@@ -128,7 +129,7 @@ polygon = PoolVector2Array( 0, 96, 32, 80, 32, 552, 0, 528 )
 [node name="bottom" type="StaticBody2D" parent="." groups=[
 "table",
 ]]
-collision_mask = 4
+collision_mask = 2
 physics_material_override = SubResource( 5 )
 __meta__ = {
 "_edit_lock_": true

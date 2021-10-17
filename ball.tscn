@@ -52,14 +52,14 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id=3]
 shader = SubResource( 2 )
-shader_param/dir = Vector2( 0.04, 0 )
+shader_param/dir = Vector2( 0.03, 0 )
 shader_param/quality = 2
 shader_param/deform = Vector2( 2, 2 )
 shader_param/offset = Vector2( 4, 0 )
 shader_param/modulate = Color( 0, 0, 0, 0.72549 )
 
 [sub_resource type="CircleShape2D" id=4]
-radius = 28.103
+radius = 25.2453
 
 [node name="ball" type="RigidBody2D"]
 collision_layer = 2
@@ -76,9 +76,6 @@ script = ExtResource( 2 )
 modulate = Color( 1, 1, 1, 0.784314 )
 material = SubResource( 3 )
 texture = ExtResource( 1 )
-__meta__ = {
-"_edit_group_": true
-}
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 4 )

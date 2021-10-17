@@ -1,5 +1,7 @@
 extends RigidBody2D
 
+signal hit(body)
+
 const BlurMx = Vector2(0.035, 0.0)
 const BlurDec = BlurMx.x / 250.0
 const BlurStop = 50 * BlurDec
@@ -10,11 +12,11 @@ onready var shader = $sprite.material
 
 func _ready():
 	gravity_scale = 0.0
-	reset()
+	_reset()
 	# warning-ignore:return_value_discarded
-	Global.connect("reset", self, "reset")
+	get_parent().connect("reset", self, "_reset")
 	# warning-ignore:return_value_discarded
-	Global.connect("damp", self, "update_damp")
+	get_parent().connect("damp", self, "update_damp")
 	$sprite.use_parent_material = true
 
 func _integrate_forces(state):
@@ -24,7 +26,7 @@ func _integrate_forces(state):
 			$sprite.use_parent_material = false
 			shader.set_shader_param("dir", BlurMx)
 
-func reset():
+func _reset():
 	angular_damp = -0.2
 	linear_damp = -0.5
 	sleeping = false # activate physics
@@ -37,9 +39,12 @@ func _on_ball_body_entered(body):
 		mag = clamp(mag, 10, 500)
 		$sound.volume_db = range_lerp(mag, 500, 10, 1, -50)
 		$sound.play()
+	elif body.name == "taco":
+		print("hit:", body.impulse) 
+		emit_signal("hit", body)
 
 func update_damp(count):
-	if linear_velocity.length() <= 2.0 or count >= Global.MxDampCnt:
+	if linear_velocity.length() <= 2.0 or count >= get_parent().MxDampCnt:
 		if not sleeping:
 			sleeping = true # stop physics
 			$sprite.use_parent_material = true
