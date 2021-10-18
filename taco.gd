@@ -50,7 +50,7 @@ func _ready():
 
 func change_state(st):
 	state = st
-	#print("State: ", state)
+	# print("State: ", state)
 	match state:
 		BallState.READY, BallState.DRAG:
 			collisions(false)

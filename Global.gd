@@ -21,7 +21,7 @@ extends Node2D
 signal reset()
 signal damp(count)
 
-const Balls = [
+const BallImage = [
 	 preload("res://images/0.png"),
 	 preload("res://images/1.png"),
 	 preload("res://images/2.png"),
@@ -41,14 +41,14 @@ const POS = [
 	Vector2(720,360), Vector2(720,420)
 ]
 
-const MxDampCnt = 36  # timer-activated damping cycles
+const MxDampCnt = 40  # timer-activated damping cycles
 var screenH
 var screenW
 
 var level = 1
 var score = 0
 
-var balls = []
+var balls = { }
 var ball0 = null
 var count_damp = 0
 
@@ -60,18 +60,18 @@ func _ready():
 	screenH = scr.y
 	randomize()
 	#z_index = 1
-	for i in range(10):
+	for id in range(10):
 		var b = ball.instance()
-		if i==0:
+		if id==0:
 			ball0 = b
 			b.mass += 2
 			ball0.connect("hit", self, "_cue_hit")
-		b.id = i
-		b.name = "ball" + str(i)
-		b.set_position(POS[i])
-		b.get_node("sprite").set_texture(Balls[i])
+		b.id = id
+		b.name = "ball" + str(id)
+		b.set_position(POS[id])
+		b.get_node("sprite").set_texture(BallImage[id])
 		add_child(b)
-		balls.append(b)
+		balls[id] = b
 	reset()
 
 func reset():
@@ -87,29 +87,47 @@ func _input(_event):
 	if Input.is_action_pressed("ui_cancel"):
 		get_tree().quit()
 
+func set_score(num):
+	score += num
+	$label.text = "Score: " + str(score)
+
+func ball_out(id):
+	if balls.has(id):
+		var b = balls[id]
+		if is_instance_valid(b):
+			if b.is_queued_for_deletion():
+				return
+			b.queue_free()
+			balls.erase(id)
+			set_score(-100)			
+	
 func drop_hole(id):
-	if id == 0:
-		print("Game over")
-		# warning-ignore:return_value_discarded
-		get_tree().reload_current_scene()
+	if id == 0: # ball-0?
+		yield(get_tree().create_timer(1), "timeout")
+		$end.play() # game over!
 	else:
-		score += 100
-		$label.text = "Score: " + str(score)
-		if is_instance_valid(balls[id]):
-			balls[id].queue_free()
-			balls.remove(id)
+		if balls.has(id):
+			var b = balls[id]
+			if is_instance_valid(b):
+				if b.is_queued_for_deletion():
+					return
+				b.queue_free()
+				balls.erase(id)
+				set_score(100)
 	$hole.play()
 
 func _on_friction_timeout():
 	count_damp = 1
 	emit_signal("damp", count_damp)
 	$inc_damp.start()
+	print("damping...")
 
 func _on_inc_damp_timeout():
 	count_damp += 1
 	if count_damp < MxDampCnt:
 		emit_signal("damp", count_damp)
-		for b in balls:
+		for k in balls:
+			var b = balls[k]
 			if is_instance_valid(b):
 				if b.linear_velocity.length() > 2:
 					return
@@ -119,3 +137,9 @@ func _on_inc_damp_timeout():
 		print("Damp finished!!")
 		$inc_damp.stop()
 		reset()
+
+func _on_end_finished():
+	print("Game over")
+	yield(get_tree().create_timer(1), "timeout")
+	# warning-ignore:return_value_discarded
+	get_tree().reload_current_scene()

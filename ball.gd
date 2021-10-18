@@ -27,8 +27,8 @@ func _integrate_forces(state):
 			shader.set_shader_param("dir", BlurMx)
 
 func _reset():
-	angular_damp = -0.2
-	linear_damp = -0.5
+	angular_damp = -0.3
+	linear_damp  = -0.4
 	sleeping = false # activate physics
 	$sprite.use_parent_material = true
 
@@ -40,7 +40,7 @@ func _on_ball_body_entered(body):
 		$sound.volume_db = range_lerp(mag, 500, 10, 1, -50)
 		$sound.play()
 	elif body.name == "taco":
-		print("hit:", body.impulse) 
+		# print("hit:", body.impulse) 
 		emit_signal("hit", body)
 
 func update_damp(count):
@@ -48,10 +48,14 @@ func update_damp(count):
 		if not sleeping:
 			sleeping = true # stop physics
 			$sprite.use_parent_material = true
-	linear_damp  += 0.07
+	linear_damp  += 0.04
 	angular_damp += 0.05
 	if not $sprite.use_parent_material:
 		var v = shader.get_shader_param("dir")
 		if v.x > BlurStop:
 			v.x -= BlurDec
 			shader.set_shader_param("dir", v)	
+
+func _on_VisibilityNotifier2D_screen_exited():
+	get_parent().ball_out(id)
+	$fail.play()

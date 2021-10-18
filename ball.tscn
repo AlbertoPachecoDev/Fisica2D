@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://images/0.png" type="Texture" id=1]
 [ext_resource path="res://ball.gd" type="Script" id=2]
 [ext_resource path="res://audio/hit.wav" type="AudioStream" id=3]
+[ext_resource path="res://audio/fail.wav" type="AudioStream" id=4]
 
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 0.5
@@ -84,8 +85,19 @@ one_way_collision_margin = 2.0
 [node name="sound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 3 )
 volume_db = -10.0
-max_distance = 1000.0
+max_distance = 600.0
 attenuation = 5.0
 area_mask = 5
 
+[node name="fail" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 4 )
+volume_db = -5.0
+max_distance = 500.0
+attenuation = 5.0
+area_mask = 5
+
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+rect = Rect2( -15, -15, 30, 30 )
+
 [connection signal="body_entered" from="." to="." method="_on_ball_body_entered"]
+[connection signal="screen_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]
