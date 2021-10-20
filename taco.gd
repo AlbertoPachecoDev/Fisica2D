@@ -28,6 +28,8 @@ https://godotengine.org/qa/70388/dragging-kinematic-bodies
 https://docs.godotengine.org/en/stable/tutorials/physics/using_kinematic_body_2d.html
 https://docs.godotengine.org/en/stable/tutorials/math/vector_math.html
 
+@todo: impulse f(topped-magnitude) then reduce 0.1 each frame
+
 """
 
 extends KinematicBody2D 
@@ -37,7 +39,7 @@ enum BallState { READY, DRAG, SHOT, HIT, MOVING, OFF }
 
 var drag_start = Vector2(200,300)
 var    impulse = Vector2.ZERO
-var     state  = BallState.OFF 
+var     state  = BallState.OFF # object state
 export  var speed  = 10 # Player movement speed
 onready var offset = Vector2(-width()/2, 0)
 
@@ -48,7 +50,7 @@ func _ready():
 	# warning-ignore:return_value_discarded
 	get_parent().connect("reset", self, "_reset")
 
-func change_state(st):
+func change_state(st): # transiciones estado
 	state = st
 	# print("State: ", state)
 	match state:
@@ -86,7 +88,7 @@ func _process(_delta):
 	var position = get_viewport().get_mouse_position()
 	if Input.is_action_pressed("click"): # dragging?
 		if state == BallState.DRAG: # moving
-			rotation = drag_start.angle_to_point(position)
+			set_rotation(drag_start.angle_to_point(position))
 			set_position(position)
 		else: # start
 			drag_start = position
@@ -99,13 +101,14 @@ func _process(_delta):
 func _physics_process(delta):
 	if state == BallState.SHOT:
 		var movement = impulse * delta * -1 # reversed
-		#print(movement.length())
 		movement = movement.clamped(MaxVel)
 		print(movement.length())
-		var collision = move_and_collide(movement) #(Vector2(100,0)) #(movement)
-		if collision:
-			# impulse = impulse.bounce()
-			print("I collide! ", collision.collider.name)
+		#var collision = move_and_collide(movement) # movement
+		# warning-ignore:return_value_discarded
+		move_and_collide(movement) # movement
+#		if collision:
+#			# impulse = impulse.bounce()
+#			print("I collide! ", collision.collider.name)
 
 func _on_del_cue_timeout():
 	change_state(BallState.MOVING)

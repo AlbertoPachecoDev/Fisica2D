@@ -58,7 +58,7 @@ friction = 0.5
 bounce = 0.5
 
 [sub_resource type="CircleShape2D" id=6]
-radius = 30.0
+radius = 24.0
 
 [node name="table" type="Area2D"]
 collision_mask = 2
@@ -85,7 +85,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="top" type="StaticBody2D" parent="." groups=[
+[node name="top1" type="StaticBody2D" parent="." groups=[
 "table",
 ]]
 collision_mask = 2
@@ -94,9 +94,26 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="segment" type="CollisionPolygon2D" parent="top"]
+[node name="segment" type="CollisionPolygon2D" parent="top1"]
+position = Vector2( -84.9092, 2 )
+scale = Vector2( 0.609792, 1 )
 build_mode = 1
-polygon = PoolVector2Array( 56, 0, 80, 32, 944, 32, 968, 0 )
+polygon = PoolVector2Array( 205, 0, 260, 32, 940, 32, 970, 0 )
+
+[node name="top2" type="StaticBody2D" parent="." groups=[
+"table",
+]]
+collision_mask = 2
+physics_material_override = SubResource( 5 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="segment" type="CollisionPolygon2D" parent="top2"]
+position = Vector2( 510.339, 2 )
+scale = Vector2( 0.588967, 1 )
+build_mode = 1
+polygon = PoolVector2Array( 55, 0, 85, 32, 750, 32, 805, 0 )
 
 [node name="left" type="StaticBody2D" parent="." groups=[
 "table",
@@ -109,7 +126,7 @@ __meta__ = {
 
 [node name="segment" type="CollisionPolygon2D" parent="left"]
 build_mode = 1
-polygon = PoolVector2Array( 0, 64, 32, 80, 32, 520, 0, 536 )
+polygon = PoolVector2Array( 0, 48, 32, 75, 32, 528, 0, 550 )
 
 [node name="right" type="StaticBody2D" parent="." groups=[
 "table",
@@ -121,11 +138,12 @@ __meta__ = {
 }
 
 [node name="segment" type="CollisionPolygon2D" parent="right"]
-position = Vector2( 992, -16 )
+position = Vector2( 992, 1.08309 )
+scale = Vector2( 1, 0.994519 )
 build_mode = 1
-polygon = PoolVector2Array( 0, 96, 32, 80, 32, 552, 0, 528 )
+polygon = PoolVector2Array( 0, 75, 32, 48, 32, 550, 0, 528 )
 
-[node name="bottom" type="StaticBody2D" parent="." groups=[
+[node name="bottom1" type="StaticBody2D" parent="." groups=[
 "table",
 ]]
 collision_mask = 2
@@ -134,25 +152,47 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="segment" type="CollisionPolygon2D" parent="bottom"]
-position = Vector2( -8, 568 )
+[node name="segment" type="CollisionPolygon2D" parent="bottom1"]
+position = Vector2( -14, 565 )
 build_mode = 1
-polygon = PoolVector2Array( 88, 0, 64, 32, 976, 32, 952, 0 )
+polygon = PoolVector2Array( 90, 0, 60, 32, 518, 32, 504, 0 )
+
+[node name="bottom2" type="StaticBody2D" parent="." groups=[
+"table",
+]]
+collision_mask = 2
+physics_material_override = SubResource( 5 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="segment" type="CollisionPolygon2D" parent="bottom2"]
+position = Vector2( 411, 565 )
+build_mode = 1
+polygon = PoolVector2Array( 150, 0, 130, 32, 570, 32, 540, 0 )
 
 [node name="hoyo1" type="CollisionShape2D" parent="."]
-position = Vector2( 16, 16 )
+position = Vector2( 12.2396, 12.9917 )
 shape = SubResource( 6 )
 
 [node name="hoyo2" type="CollisionShape2D" parent="."]
-position = Vector2( 1008, 16 )
+position = Vector2( 1011.01, 12.9917 )
 shape = SubResource( 6 )
 
 [node name="hoyo3" type="CollisionShape2D" parent="."]
-position = Vector2( 16, 584 )
+position = Vector2( 9.23135, 587.76 )
 shape = SubResource( 6 )
 
 [node name="hoyo4" type="CollisionShape2D" parent="."]
-position = Vector2( 1008, 584 )
+position = Vector2( 1016.27, 586.256 )
+shape = SubResource( 6 )
+
+[node name="hoyo5" type="CollisionShape2D" parent="."]
+position = Vector2( 524, -4 )
+shape = SubResource( 6 )
+
+[node name="hoyo6" type="CollisionShape2D" parent="."]
+position = Vector2( 524, 605.256 )
 shape = SubResource( 6 )
 
 [connection signal="body_entered" from="." to="." method="_on_table_body_entered"]

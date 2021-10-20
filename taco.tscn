@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://images/taco.png" type="Texture" id=1]
+[ext_resource path="res://images/cue.png" type="Texture" id=1]
 [ext_resource path="res://taco.gd" type="Script" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
@@ -8,6 +8,7 @@ extents = Vector2( 4, 10 )
 
 [node name="taco" type="KinematicBody2D"]
 position = Vector2( -2.87019, 3.58774 )
+input_pickable = true
 collision_layer = 4
 collision_mask = 2
 script = ExtResource( 2 )
