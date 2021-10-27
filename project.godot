@@ -11,8 +11,12 @@ config_version=4
 [application]
 
 config/name="PoolGame"
-run/main_scene="res://Global.tscn"
+run/main_scene="res://main.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Global="*res://Global.tscn"
 
 [input]
 

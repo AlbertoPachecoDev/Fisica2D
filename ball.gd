@@ -2,7 +2,7 @@ extends RigidBody2D
 
 signal hit(body)
 
-const BlurMx = Vector2(0.035, 0.0)
+const BlurMx = Vector2(0.03, 0.0)
 const BlurDec = BlurMx.x / 250.0
 const BlurStop = 50 * BlurDec
 
@@ -11,13 +11,15 @@ var id = 0
 onready var shader = $sprite.material
 
 func _ready():
-	gravity_scale = 0.0
+	gravity_scale = 0.0 # remove gravity force!
 	_reset()
 	# warning-ignore:return_value_discarded
 	get_parent().connect("reset", self, "_reset")
 	# warning-ignore:return_value_discarded
 	get_parent().connect("damp", self, "update_damp")
 	$sprite.use_parent_material = true
+	$drop_fx.interpolate_property(self, 'modulate:a',
+		null, 0, 0.3, Tween.TRANS_QUAD, Tween.EASE_OUT)
 
 func _integrate_forces(state):
 	var mag = state.linear_velocity.length()
@@ -44,18 +46,27 @@ func _on_ball_body_entered(body):
 		emit_signal("hit", body)
 
 func update_damp(count):
-	if linear_velocity.length() <= 2.0 or count >= get_parent().MxDampCnt:
+	if linear_velocity.length() < 3 or count >= get_parent().MxDampCnt:
 		if not sleeping:
 			sleeping = true # stop physics
 			$sprite.use_parent_material = true
-	linear_damp  += 0.04
-	angular_damp += 0.05
+	#linear_damp  += 0.04
+	#angular_damp += 0.03
+	linear_damp  = lerp(linear_damp,  1.8, 0.03)
+	angular_damp = lerp(angular_damp, 0.1, 0.02)
 	if not $sprite.use_parent_material:
 		var v = shader.get_shader_param("dir")
 		if v.x > BlurStop:
 			v.x -= BlurDec
 			shader.set_shader_param("dir", v)	
 
-func _on_VisibilityNotifier2D_screen_exited():
-	get_parent().ball_out(id)
+func drop(): # issue-1 drop-hole effect 
+	$drop_fx.start()
+	yield(get_tree().create_timer(0.1), "timeout") # delay
+	sleeping = true # stop movement
+
+func _on_VisibilityNotifier2D_screen_exited(): # issue-2: out-of-screen
 	$fail.play()
+
+func _on_fail_finished(): # issue-3: delayed removing outsider-ball
+	get_parent().ball_out(id)

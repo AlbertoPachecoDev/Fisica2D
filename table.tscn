@@ -73,6 +73,7 @@ __meta__ = {
 }
 
 [node name="Shader" type="TextureRect" parent="."]
+visible = false
 modulate = Color( 0.34902, 0.827451, 1, 0.380392 )
 self_modulate = Color( 1, 1, 1, 0.498039 )
 material = SubResource( 2 )
@@ -98,7 +99,7 @@ __meta__ = {
 position = Vector2( -84.9092, 2 )
 scale = Vector2( 0.609792, 1 )
 build_mode = 1
-polygon = PoolVector2Array( 205, 0, 260, 32, 940, 32, 970, 0 )
+polygon = PoolVector2Array( 205, 0, 268, 32, 940, 32, 970, 0 )
 
 [node name="top2" type="StaticBody2D" parent="." groups=[
 "table",
@@ -113,7 +114,7 @@ __meta__ = {
 position = Vector2( 510.339, 2 )
 scale = Vector2( 0.588967, 1 )
 build_mode = 1
-polygon = PoolVector2Array( 55, 0, 85, 32, 750, 32, 805, 0 )
+polygon = PoolVector2Array( 55, 0, 85, 32, 748, 32, 805, 0 )
 
 [node name="left" type="StaticBody2D" parent="." groups=[
 "table",
@@ -126,7 +127,7 @@ __meta__ = {
 
 [node name="segment" type="CollisionPolygon2D" parent="left"]
 build_mode = 1
-polygon = PoolVector2Array( 0, 48, 32, 75, 32, 528, 0, 550 )
+polygon = PoolVector2Array( 0, 48, 32, 77, 32, 526, 0, 550 )
 
 [node name="right" type="StaticBody2D" parent="." groups=[
 "table",
@@ -141,7 +142,7 @@ __meta__ = {
 position = Vector2( 992, 1.08309 )
 scale = Vector2( 1, 0.994519 )
 build_mode = 1
-polygon = PoolVector2Array( 0, 75, 32, 48, 32, 550, 0, 528 )
+polygon = PoolVector2Array( 0, 76, 32, 48, 32, 550, 0, 528 )
 
 [node name="bottom1" type="StaticBody2D" parent="." groups=[
 "table",
@@ -153,9 +154,9 @@ __meta__ = {
 }
 
 [node name="segment" type="CollisionPolygon2D" parent="bottom1"]
-position = Vector2( -14, 565 )
+position = Vector2( -14, 565.652 )
 build_mode = 1
-polygon = PoolVector2Array( 90, 0, 60, 32, 518, 32, 504, 0 )
+polygon = PoolVector2Array( 90, 0, 60, 32, 518, 32, 502, 0 )
 
 [node name="bottom2" type="StaticBody2D" parent="." groups=[
 "table",
@@ -169,7 +170,7 @@ __meta__ = {
 [node name="segment" type="CollisionPolygon2D" parent="bottom2"]
 position = Vector2( 411, 565 )
 build_mode = 1
-polygon = PoolVector2Array( 150, 0, 130, 32, 570, 32, 540, 0 )
+polygon = PoolVector2Array( 150, 0, 130, 32, 570, 32, 538, 0 )
 
 [node name="hoyo1" type="CollisionShape2D" parent="."]
 position = Vector2( 12.2396, 12.9917 )

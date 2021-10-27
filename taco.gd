@@ -37,11 +37,12 @@ extends KinematicBody2D
 const MaxVel = 30
 enum BallState { READY, DRAG, SHOT, HIT, MOVING, OFF }
 
-var drag_start = Vector2(200,300)
-var    impulse = Vector2.ZERO
-var     state  = BallState.OFF # object state
-export  var speed  = 10 # Player movement speed
-onready var offset = Vector2(-width()/2, 0)
+onready var drag_start = Vector2(200,300)
+onready var    impulse = Vector2.ZERO
+onready var      state = BallState.OFF # object state
+onready var     offset = Vector2(-width()/2, 0)
+
+export onready var speed = 10 # Player movement speed
 
 func _ready():
 	set_pickable(true) # draggable
@@ -52,7 +53,6 @@ func _ready():
 
 func change_state(st): # transiciones estado
 	state = st
-	# print("State: ", state)
 	match state:
 		BallState.READY, BallState.DRAG:
 			collisions(false)
@@ -102,13 +102,8 @@ func _physics_process(delta):
 	if state == BallState.SHOT:
 		var movement = impulse * delta * -1 # reversed
 		movement = movement.clamped(MaxVel)
-		print(movement.length())
-		#var collision = move_and_collide(movement) # movement
 		# warning-ignore:return_value_discarded
 		move_and_collide(movement) # movement
-#		if collision:
-#			# impulse = impulse.bounce()
-#			print("I collide! ", collision.collider.name)
 
 func _on_del_cue_timeout():
 	change_state(BallState.MOVING)
