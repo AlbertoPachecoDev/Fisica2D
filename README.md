@@ -1,7 +1,7 @@
 # Marcador
-Godot Game Physics 2D
+Godot Billiard Game using 2d-Physics
 
-Prototipo Juego 2D incorporando Física 2D y colisiones
+Juego de billar aplicando Física 2d: colisiones, objetos estáticos, rígidos y cinemáticos.
 
 ### @todo:
- - Cue real drag&drop coordinates
+ - Mobile version
