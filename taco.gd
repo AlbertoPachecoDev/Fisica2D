@@ -85,6 +85,9 @@ func _on_contact_detected(_body):
 func _process(_delta):
 	if state == BallState.MOVING: return
 	if state == BallState.OFF: return
+	if get_tree().paused:
+		print("CUE PAUSED!")
+		return
 	var position = get_viewport().get_mouse_position()
 	if Input.is_action_pressed("click"): # dragging?
 		if state == BallState.DRAG: # moving

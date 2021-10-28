@@ -45,35 +45,19 @@ const POS = [
 ]
 
 const MxDampCnt = 45  # timer-activated damping cycles
-var screenH
-var screenW
 
 onready var shots = 0  # issue-7
 onready var balls = { }
 onready var ball0 = null
 onready var count_damp = 0
 onready var drop_id = null # issue-1 drop-ball effect
-onready var first_ball = 0 # issue-8 winning ball
 onready var drops = 0   # issue-8 dropped balls counter 
 
 onready var ball = preload("res://ball.tscn")
-onready var cont = get_node("buttons/continue") # issue-5
-onready var quit = get_node("buttons/quit")     # issue-6
 
 func _ready():
-	quit.visible = false # issue-5
-	cont.visible = false # issue-6
-	$buttons.z_index = 1
-	var scr = get_viewport_rect().size
-	screenW = scr.x
-	screenH = scr.y
-	pause_mode = Node.PAUSE_MODE_PROCESS # issue-4 avoids pausing input
-	var tot = 5 if Global.level==1 else 10 # issue-7 & 8
-	var rng = RandomNumberGenerator.new()
-	rng.randomize()
-	first_ball = rng.randi_range(1, tot-1) # issue-8
-	$info.text = "Try first ball #" + str(first_ball)
-	for id in range(tot): # issue-7: only 5-balls if level=0
+	Global.set_main(get_node(".")) # issue-13
+	for id in range(Global.tot_balls): # issue-7
 		var b = ball.instance()
 		if id == 0:
 			ball0 = b
@@ -86,38 +70,43 @@ func _ready():
 		b.set_position(POS[id])
 		b.get_node("sprite").set_texture(BallImage[id])
 		add_child(b)
+	set_process_input(false)
 	reset()
 
-func _input(_event):
-	if Input.is_action_pressed("ui_cancel"): # issue-5 quit game
-		cont.visible = true
-		quit.visible = true
-		get_tree().paused = true # BUG
-	elif Input.is_action_pressed("ui_accept"): # issue-4 pause mode
-		var pause = not get_tree().paused
-		if pause:
-			$info.text = "(Paused)"
-		else:
-			$info.text = ""
-		$start_damp.paused = pause
-		$inc_damp.paused = pause
-		get_tree().paused = pause
+func set_pause(mode): # issue-13
+	print("set_pause=", mode)
+	get_tree().paused = mode
+
+func toggle_pause(): # issue-13
+	var pause = not get_tree().paused
+	print("toggle_pause=", pause)
+	if pause:
+		Global.set_score(0, "(Paused)") # display status
+	else:
+		Global.set_score(0, " ") # clear info
+	set_pause(pause)
 
 func reset():
 	$inc_damp.stop()
 	count_damp = 0
 	if shots > 0:
-		$info.text = "Shots: "+str(shots)
+		Global.set_score(0, "Shots: "+str(shots)) # issue-13
+	else:
+		Global.set_score() # issue-13 refresh score
 	shots += 1
-	set_score()
 	emit_signal("reset")
 
 func _cue_hit(_body):
 	$start_damp.start()
 
-func set_score(num=0):
-	Global.score += num
-	$score.text = "Level: "+str(Global.level)+"  Score: "+str(Global.score)
+func drop_hole(id): # issue-1 drop-ball effect
+	drops += 1 # issue-8
+	drop_id = id
+	if id == 0:
+		ball0.drop() # bug
+	else:
+		balls[id].drop()
+	$hole.play()
 
 func ball_out(id): # issue-3 remove outsider-ball
 	if balls.has(id):
@@ -128,7 +117,7 @@ func ball_out(id): # issue-3 remove outsider-ball
 			b.queue_free()
 			balls.erase(id)
 			drops += 1
-			set_score(-100)			
+			Global.set_score(-100)			
 	
 func _on_friction_timeout():
 	count_damp = 1
@@ -154,18 +143,6 @@ func _on_inc_damp_timeout():
 		$inc_damp.stop()
 		reset()
 
-func _on_end_finished():
-	cont.visible = true # issue-6 continue-button
-
-func drop_hole(id): # issue-1 drop-ball effect
-	drops += 1 # issue-8
-	drop_id = id
-	if id == 0:
-		ball0.drop() # bug
-	else:
-		balls[id].drop()
-	$hole.play()
-
 func _on_hole_finished(): # issue-1 drop-ball effect
 	if drop_id == 0: # ball-0?
 		$end.play() # issue-10 game over!
@@ -178,23 +155,19 @@ func _on_hole_finished(): # issue-1 drop-ball effect
 				b.queue_free()
 				balls.erase(drop_id)
 				var punish = 100 if shots > 10 else ((shots-1) * 10)
-				if drops==1 and first_ball==drop_id: # issue-8 first-drop is winning-ball?
-					set_score(700 - punish)
-					$info.text = "Wonderful!"
+				if drops==1 and Global.first_ball==drop_id: # issue-8 first-drop is winning-ball?
+					Global.set_score(700 - punish, "Wonderful!")
+					#$info.text = "Wonderful!"
 				elif not balls.empty() and balls.keys().min() > drop_id: # issue-9 smaller ball
-					set_score(200 + 50 * drop_id - punish) 
-					$info.text = "Great!"
+					Global.set_score(200 + 50 * drop_id - punish, "Great!") 
+					#$info.text = "Great!"
 				else: # issue-9
-					set_score(120 - punish)
-					$info.text = "Fine!"
+					Global.set_score(120 - punish, "Fine!")
+					# $info.text = "Fine!"
 				if balls.empty(): # issue-10 end: wins!
 					Global.level += 1
 					$end.play()
 
-func _on_continue_pressed(): # issue-6-10 restart game
-	get_tree().paused = false # issue-5 bug
-	# warning-ignore:return_value_discarded
-	get_tree().reload_current_scene()
-
-func _on_exit_pressed(): #issue-5
-	get_tree().quit()
+func _on_end_finished():
+	#Global.cont.visible = true # issue-6 continue-button
+	Global.show_buttons(true, false) # issue-13 show continue-button only
