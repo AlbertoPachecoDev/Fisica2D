@@ -37,16 +37,21 @@ const BallImage = [
 	 preload("res://images/9.png"),
 ]
 const POS = [
-	Vector2(300,300), Vector2(600,300), 
-	Vector2(660,300), Vector2(660,240), 
-	Vector2(660,360), Vector2(720,180),
-	Vector2(720,240), Vector2(720,300),
-	Vector2(720,360), Vector2(720,420)
+	Vector2(300,300), # 0 - 1
+	Vector2(600,300), # 1 - 1
+	Vector2(650,250), # 2 - 1
+	Vector2(650,350), # 3 - 1
+	Vector2(650,300), # 4 - 1 (5) issue-12
+	Vector2(700,300), # 5 - 2 (6) issue-12
+	Vector2(700,200), # 6 - 3
+	Vector2(700,400), # 7 - 3 (8) issue-12
+	Vector2(700,250), # 8 - 4
+	Vector2(700,350), # 9 - 4
 ]
 
+const BALLS_LEVEL = [5, 6, 8] # issue-12
+
 const MxDampCnt = 45  # timer-activated damping cycles
-var screenH
-var screenW
 
 onready var shots = 0  # issue-7
 onready var balls = { }
@@ -54,7 +59,7 @@ onready var ball0 = null
 onready var count_damp = 0
 onready var drop_id = null # issue-1 drop-ball effect
 onready var first_ball = 0 # issue-8 winning ball
-onready var drops = 0   # issue-8 dropped balls counter 
+onready var drops = 0		 # issue-8 dropped balls counter 
 
 onready var ball = preload("res://ball.tscn")
 onready var cont = get_node("buttons/continue") # issue-5
@@ -64,11 +69,8 @@ func _ready():
 	quit.visible = false # issue-5
 	cont.visible = false # issue-6
 	$buttons.z_index = 1
-	var scr = get_viewport_rect().size
-	screenW = scr.x
-	screenH = scr.y
 	pause_mode = Node.PAUSE_MODE_PROCESS # issue-4 avoids pausing input
-	var tot = 5 if Global.level==1 else 10 # issue-7 & 8
+	var tot = POS.size() if Global.level>3 else BALLS_LEVEL[Global.level-1] # issue-12
 	var rng = RandomNumberGenerator.new()
 	rng.randomize()
 	first_ball = rng.randi_range(1, tot-1) # issue-8
@@ -119,6 +121,15 @@ func set_score(num=0):
 	Global.score += num
 	$score.text = "Level: "+str(Global.level)+"  Score: "+str(Global.score)
 
+func drop_hole(id): # issue-1 drop-ball effect
+	drops += 1 # issue-8
+	drop_id = id
+	if id == 0:
+		ball0.drop() # bug
+	else:
+		balls[id].drop()
+	$hole.play()
+
 func ball_out(id): # issue-3 remove outsider-ball
 	if balls.has(id):
 		var b = balls[id]
@@ -128,8 +139,10 @@ func ball_out(id): # issue-3 remove outsider-ball
 			b.queue_free()
 			balls.erase(id)
 			drops += 1
-			set_score(-100)			
-	
+			set_score(-100)
+	if id == 0: # ball-0?
+		$end.play() # issue-11 game over!
+
 func _on_friction_timeout():
 	count_damp = 1
 	emit_signal("damp", count_damp)
@@ -157,18 +170,9 @@ func _on_inc_damp_timeout():
 func _on_end_finished():
 	cont.visible = true # issue-6 continue-button
 
-func drop_hole(id): # issue-1 drop-ball effect
-	drops += 1 # issue-8
-	drop_id = id
-	if id == 0:
-		ball0.drop() # bug
-	else:
-		balls[id].drop()
-	$hole.play()
-
 func _on_hole_finished(): # issue-1 drop-ball effect
 	if drop_id == 0: # ball-0?
-		$end.play() # issue-10 game over!
+		$end.play()  # issue-10 game over!
 	else:
 		if balls.has(drop_id):
 			var b = balls[drop_id]

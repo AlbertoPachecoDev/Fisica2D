@@ -114,7 +114,7 @@ __meta__ = {
 position = Vector2( 510.339, 2 )
 scale = Vector2( 0.588967, 1 )
 build_mode = 1
-polygon = PoolVector2Array( 55, 0, 85, 32, 748, 32, 805, 0 )
+polygon = PoolVector2Array( 55, 0, 85, 32, 746, 32, 805, 0 )
 
 [node name="left" type="StaticBody2D" parent="." groups=[
 "table",

@@ -105,12 +105,12 @@ func _physics_process(delta):
 		# warning-ignore:return_value_discarded
 		move_and_collide(movement) # movement
 
-func _on_del_cue_timeout():
-	change_state(BallState.MOVING)
-
 # https://godotengine.org/qa/57186/disable-collisionshape2d-%24collisionshape2d-disabled-godot
 func collisions(flag):
 	$collision.set_deferred("disabled", not flag) 
 
 func width():
 	return $sprite.texture.get_width()
+
+func _on_del_cue_timeout():
+	change_state(BallState.MOVING)

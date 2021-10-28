@@ -16,7 +16,7 @@ config/icon="res://icon.png"
 
 [autoload]
 
-Global="*res://Global.tscn"
+Global="*res://Global.gd"
 
 [input]
 
