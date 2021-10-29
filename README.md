@@ -1,4 +1,4 @@
-# Marcador
+# Juego Mesa de Billar 2D
 Godot Billiard Game using 2D-Physics
 
 Juego de billar aplicando Física 2D: colisiones, objetos estáticos, rígidos y cinemáticos.
