@@ -34,7 +34,7 @@ https://docs.godotengine.org/en/stable/tutorials/math/vector_math.html
 
 extends KinematicBody2D 
 
-const MaxVel = 30
+const MaxVel = 24
 enum BallState { READY, DRAG, SHOT, HIT, MOVING, OFF }
 
 onready var drag_start = Vector2(200,300)

@@ -31,6 +31,7 @@ click={
 2d_physics/layer_1="table"
 2d_physics/layer_2="ball"
 2d_physics/layer_3="cue"
+2d_physics/layer_4="ball0"
 
 [physics]
 

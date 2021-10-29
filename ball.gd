@@ -41,7 +41,7 @@ func _on_ball_body_entered(body):
 		mag = clamp(mag, 10, 500)
 		$sound.volume_db = range_lerp(mag, 500, 10, 1, -50)
 		$sound.play()
-	elif body.name == "taco":
+	elif body.name=="taco" and id==0: # issue-13 hit only ball0
 		# print("hit:", body.impulse) 
 		emit_signal("hit", body)
 

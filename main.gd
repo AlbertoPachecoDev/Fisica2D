@@ -81,6 +81,7 @@ func _ready():
 			ball0 = b
 			b.mass += 2
 			ball0.connect("hit", self, "_cue_hit")
+			ball0.set_collision_layer_bit(3, true) # issue-13 set ball0 layer [bit#3]
 		else:
 			balls[id] = b
 		b.id = id
@@ -147,7 +148,7 @@ func _on_friction_timeout():
 	count_damp = 1
 	emit_signal("damp", count_damp)
 	$inc_damp.start()
-	print("damping...")
+	# print("damping...")
 
 func _on_inc_damp_timeout():
 	count_damp += 1
@@ -160,10 +161,10 @@ func _on_inc_damp_timeout():
 					return
 		if ball0.linear_velocity.length() > 2:
 			return
-		print("Balls stopped!! ", count_damp)
+		# print("Balls stopped!! ", count_damp)
 		reset()
 	else:
-		print("Damp finished!!")
+		# print("Damp finished!!")
 		$inc_damp.stop()
 		reset()
 
@@ -200,5 +201,5 @@ func _on_continue_pressed(): # issue-6-10 restart game
 	# warning-ignore:return_value_discarded
 	get_tree().reload_current_scene()
 
-func _on_exit_pressed(): #issue-5
+func _on_exit_pressed(): # issue-5 end-of-game
 	get_tree().quit()
