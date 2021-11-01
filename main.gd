@@ -62,12 +62,12 @@ onready var first_ball = 0 # issue-8 winning ball
 onready var drops = 0		 # issue-8 dropped balls counter 
 
 onready var ball = preload("res://ball.tscn")
-onready var cont = get_node("buttons/continue") # issue-5
 onready var quit = get_node("buttons/quit")     # issue-6
+onready var cont = get_node("buttons/continue") # issue-5
+onready var rst = get_node("buttons/reset")
 
 func _ready():
-	quit.visible = false # issue-5
-	cont.visible = false # issue-6
+	$buttons.visible = false
 	$buttons.z_index = 1
 	pause_mode = Node.PAUSE_MODE_PROCESS # issue-4 avoids pausing input
 	var tot = POS.size() if Global.level>3 else BALLS_LEVEL[Global.level-1] # issue-12
@@ -91,13 +91,7 @@ func _ready():
 		add_child(b)
 	reset()
 
-func _input(_event):
-	if Input.is_action_pressed("ui_cancel"): # issue-5 quit game
-		cont.visible = true
-		quit.visible = true
-		get_tree().paused = true # BUG
-	elif Input.is_action_pressed("ui_accept"): # issue-4 pause mode
-		var pause = not get_tree().paused
+func set_pause(pause):
 		if pause:
 			$info.text = "(Paused)"
 		else:
@@ -105,6 +99,14 @@ func _input(_event):
 		$start_damp.paused = pause
 		$inc_damp.paused = pause
 		get_tree().paused = pause
+
+func _input(_event):
+	if Input.is_action_pressed("ui_cancel"): # issue-5 quit game
+		$buttons.visible = true
+		set_pause(true)
+	elif Input.is_action_pressed("ui_accept"): # issue-4 pause mode
+		var pause = not get_tree().paused
+		set_pause(pause)
 
 func reset():
 	$inc_damp.stop()
@@ -148,7 +150,6 @@ func _on_friction_timeout():
 	count_damp = 1
 	emit_signal("damp", count_damp)
 	$inc_damp.start()
-	# print("damping...")
 
 func _on_inc_damp_timeout():
 	count_damp += 1
@@ -161,15 +162,10 @@ func _on_inc_damp_timeout():
 					return
 		if ball0.linear_velocity.length() > 2:
 			return
-		# print("Balls stopped!! ", count_damp)
 		reset()
 	else:
-		# print("Damp finished!!")
 		$inc_damp.stop()
 		reset()
-
-func _on_end_finished():
-	cont.visible = true # issue-6 continue-button
 
 func _on_hole_finished(): # issue-1 drop-ball effect
 	if drop_id == 0: # ball-0?
@@ -196,10 +192,15 @@ func _on_hole_finished(): # issue-1 drop-ball effect
 					Global.level += 1
 					$end.play()
 
-func _on_continue_pressed(): # issue-6-10 restart game
-	get_tree().paused = false # issue-5 bug
+func _on_quit_pressed(): # end-game
+	get_tree().quit()
+
+func _on_reset_pressed(): # restart game
+	Global.score = 0 # issue-14
+	set_pause(false)
 	# warning-ignore:return_value_discarded
 	get_tree().reload_current_scene()
 
-func _on_exit_pressed(): # issue-5 end-of-game
-	get_tree().quit()
+func _on_continue_pressed():
+	$buttons.visible = false  # issue-14
+	set_pause(false)

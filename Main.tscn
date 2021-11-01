@@ -64,9 +64,9 @@ wait_time = 0.25
 [node name="buttons" type="Node2D" parent="."]
 
 [node name="quit" type="Button" parent="buttons"]
-margin_left = 472.0
+margin_left = 468.0
 margin_top = 200.0
-margin_right = 580.0
+margin_right = 584.0
 margin_bottom = 248.0
 theme = SubResource( 2 )
 text = "Quit?"
@@ -74,11 +74,22 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="reset" type="Button" parent="buttons"]
+margin_left = 468.0
+margin_top = 270.723
+margin_right = 584.0
+margin_bottom = 318.723
+theme = SubResource( 2 )
+text = "Reset?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="continue" type="Button" parent="buttons"]
 margin_left = 468.0
-margin_top = 270.0
+margin_top = 340.0
 margin_right = 584.0
-margin_bottom = 318.0
+margin_bottom = 388.0
 theme = SubResource( 2 )
 text = "Continue?"
 __meta__ = {
@@ -86,8 +97,8 @@ __meta__ = {
 }
 
 [connection signal="finished" from="hole" to="." method="_on_hole_finished"]
-[connection signal="finished" from="end" to="." method="_on_end_finished"]
 [connection signal="timeout" from="start_damp" to="." method="_on_friction_timeout"]
 [connection signal="timeout" from="inc_damp" to="." method="_on_inc_damp_timeout"]
-[connection signal="pressed" from="buttons/quit" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="buttons/quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="buttons/reset" to="." method="_on_reset_pressed"]
 [connection signal="pressed" from="buttons/continue" to="." method="_on_continue_pressed"]
